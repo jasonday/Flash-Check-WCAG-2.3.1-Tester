@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Flash Check: WCAG 2.3.1 Tester",
   "short_name": "Flash Check",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Records a web page and reports whether it fails WCAG 2.2 SC 2.3.1 Three Flashes or Below Threshold (general and red flash).",
   "minimum_chrome_version": "116",
   "permissions": ["activeTab", "tabCapture", "offscreen", "scripting", "storage"],
