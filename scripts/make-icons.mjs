@@ -1,5 +1,6 @@
-// Writes icons/icon{16,32,48,128}.png with no dependencies: a dark blue
-// rounded square with a white lightning bolt, rasterized with 4x4 supersampling.
+// Writes icons/icon{16,32,48,128}.png and icons/store-icon-128.png with no
+// dependencies: a dark blue rounded square with a white lightning bolt,
+// rasterized with 4x4 supersampling.
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { encodePng } from './png.mjs';
 
@@ -24,8 +25,10 @@ function inRoundRect(x, y, r) {
   return (x - cx) ** 2 + (y - cy) ** 2 <= r * r;
 }
 
-function png(size) {
+// `pad` is transparent margin in pixels on each side around the artwork.
+function png(size, pad = 0) {
   const SS = 4;
+  const art = size - 2 * pad;
   const raw = Buffer.alloc(size * (size * 4 + 1));
   for (let y = 0; y < size; y++) {
     raw[y * (size * 4 + 1)] = 0;
@@ -34,9 +37,9 @@ function png(size) {
       let fg = 0;
       for (let sy = 0; sy < SS; sy++) {
         for (let sx = 0; sx < SS; sx++) {
-          const u = (x + (sx + 0.5) / SS) / size;
-          const v = (y + (sy + 0.5) / SS) / size;
-          if (!inRoundRect(u, v, 0.2)) continue;
+          const u = (x - pad + (sx + 0.5) / SS) / art;
+          const v = (y - pad + (sy + 0.5) / SS) / art;
+          if (u < 0 || u > 1 || v < 0 || v > 1 || !inRoundRect(u, v, 0.2)) continue;
           if (inPoly(u, v, BOLT)) fg++;
           else bg++;
         }
@@ -54,4 +57,6 @@ function png(size) {
 const dir = new URL('../icons/', import.meta.url);
 mkdirSync(dir, { recursive: true });
 for (const size of [16, 32, 48, 128]) writeFileSync(new URL(`icon${size}.png`, dir), png(size));
+// Chrome Web Store icon: 128 x 128 with 96 x 96 artwork and 16 px transparent padding.
+writeFileSync(new URL('store-icon-128.png', dir), png(128, 16));
 console.log('icons written');
