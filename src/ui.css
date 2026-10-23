@@ -1,0 +1,68 @@
+/* Shared tokens and base styles for the popup and report. All text/background
+   pairs meet WCAG 2.2 AA contrast (4.5:1 or better) in both themes. */
+:root {
+  --bg: #ffffff;
+  --surface: #f4f5f7;
+  --text: #1b1b1b;
+  --muted: #4a4f57;
+  --border: #8a9099;
+  --accent: #1f3a93;
+  --accent-text: #ffffff;
+  --fail: #b3261e;
+  --fail-bg: #fdecea;
+  --pass: #146c2e;
+  --pass-bg: #e6f4ea;
+  --warn: #7a4d00;
+  --warn-bg: #fff4dc;
+  --focus: #1f3a93;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15171a;
+    --surface: #1f2328;
+    --text: #eceef1;
+    --muted: #b6bcc5;
+    --border: #7d848e;
+    --accent: #9db4ff;
+    --accent-text: #0b1330;
+    --fail: #ffb4ab;
+    --fail-bg: #3b1412;
+    --pass: #8fd9a0;
+    --pass-bg: #0f2e18;
+    --warn: #ffd27a;
+    --warn-bg: #35280b;
+    --focus: #9db4ff;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+h1, h2, h3 { line-height: 1.25; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+button {
+  font: inherit;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+button.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); font-weight: 600; }
+button:disabled { opacity: 0.6; cursor: not-allowed; }
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+.notice { border-left: 4px solid var(--border); background: var(--surface); padding: 8px 12px; border-radius: 4px; }
+.notice.fail { border-color: var(--fail); background: var(--fail-bg); }
+.notice.pass { border-color: var(--pass); background: var(--pass-bg); }
+.notice.review, .notice.warn { border-color: var(--warn); background: var(--warn-bg); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

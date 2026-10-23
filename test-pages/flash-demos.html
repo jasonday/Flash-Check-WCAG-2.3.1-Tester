@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flash Check Demos</title>
+  <link rel="stylesheet" href="../src/ui.css">
+  <style>
+    main { max-width: 1000px; margin: 0 auto; padding: 16px 24px 64px; }
+    .warning { font-size: 18px; border-left-width: 6px; padding: 14px 16px; }
+    .demo { border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin: 16px 0; }
+    .demo h2 { font-size: 19px; margin: 0 0 4px; }
+    .demo p { margin: 0 0 8px; }
+    .stage { background: var(--surface); border: 1px dashed var(--border); display: grid; place-items: center; }
+    .stage canvas { display: block; }
+    .controls { display: flex; gap: 8px; margin: 8px 0; }
+    .sticky { position: sticky; top: 0; z-index: 1; background: var(--bg); padding: 8px 0; border-bottom: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Flash Check demos</h1>
+    <div class="notice fail warning" role="note">
+      <strong>Photosensitive seizure warning.</strong>
+      These demos flash rapidly and some flash in saturated red. Do not start them if you or anyone who can see your screen may be sensitive to flashing light. Nothing flashes until you select a Start button. Each demo stops by itself after 20 seconds, and the Escape key stops all of them.
+    </div>
+    <p>Use these to check the extension. Start one demo, then run a 10 second test from the extension button. Compare the result with the expected outcome.</p>
+    <div class="sticky"><button type="button" id="stop-all">Stop all demos</button></div>
+    <div id="demos"></div>
+  </main>
+  <script type="module">
+    import { SCENARIOS, paint } from './scenarios.js';
+
+    const running = new Map();
+    const stop = (id) => {
+      const r = running.get(id);
+      if (!r) return;
+      cancelAnimationFrame(r.raf);
+      clearTimeout(r.timeout);
+      r.ctx.fillStyle = '#808080';
+      r.ctx.fillRect(0, 0, r.sc.w, r.sc.h);
+      r.btn.textContent = 'Start';
+      r.btn.setAttribute('aria-pressed', 'false');
+      running.delete(id);
+    };
+    const stopAll = () => [...running.keys()].forEach(stop);
+
+    for (const sc of SCENARIOS) {
+      const dpr = window.devicePixelRatio || 1;
+      const canvas = document.createElement('canvas');
+      canvas.width = sc.w * dpr;
+      canvas.height = sc.h * dpr;
+      canvas.style.width = `${sc.w}px`;
+      canvas.style.height = `${sc.h}px`;
+      canvas.setAttribute('role', 'img');
+      canvas.setAttribute('aria-label', `Flashing area for: ${sc.name}`);
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      ctx.fillStyle = '#808080';
+      ctx.fillRect(0, 0, sc.w, sc.h);
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = 'Start';
+      btn.setAttribute('aria-pressed', 'false');
+      btn.addEventListener('click', () => {
+        if (running.has(sc.id)) return stop(sc.id);
+        const t0 = performance.now();
+        const r = { sc, ctx, btn };
+        const loop = () => {
+          paint(ctx, sc, performance.now() - t0);
+          r.raf = requestAnimationFrame(loop);
+        };
+        r.timeout = setTimeout(() => stop(sc.id), 20000);
+        running.set(sc.id, r);
+        btn.textContent = 'Stop';
+        btn.setAttribute('aria-pressed', 'true');
+        loop();
+      });
+
+      const exp = `Expected: general flash ${sc.expect.general}, red flash ${sc.expect.red}.`;
+      const card = document.createElement('section');
+      card.className = 'demo';
+      card.setAttribute('aria-labelledby', `h-${sc.id}`);
+      card.innerHTML = `<h2 id="h-${sc.id}"></h2><p></p><p><strong></strong></p><div class="controls"></div><div class="stage"></div>`;
+      card.querySelector('h2').textContent = sc.name;
+      card.querySelector('p').textContent = `${sc.w} by ${sc.h} CSS pixels. ${sc.why}`;
+      card.querySelector('strong').textContent = exp;
+      card.querySelector('.controls').append(btn);
+      card.querySelector('.stage').append(canvas);
+      document.getElementById('demos').append(card);
+    }
+    document.getElementById('stop-all').addEventListener('click', stopAll);
+    document.addEventListener('keydown', (e) => e.key === 'Escape' && stopAll());
+  </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flash Check Harness</title>
+  <link rel="stylesheet" href="../src/ui.css">
+  <style>
+    main { max-width: 900px; margin: 0 auto; padding: 16px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .ok { color: var(--pass); font-weight: 700; }
+    .bad { color: var(--fail); font-weight: 700; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Flash engine harness</h1>
+    <p>Runs each scenario through the same capture pipeline the extension uses (a video stream read frame by frame), using a hidden canvas. Nothing flashes on screen.</p>
+    <button type="button" class="primary" id="run">Run all scenarios</button>
+    <p id="status" role="status"></p>
+    <table>
+      <caption class="visually-hidden">Scenario results</caption>
+      <thead><tr><th scope="col">Scenario</th><th scope="col">Expected</th><th scope="col">Measured</th><th scope="col">Match</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </main>
+  <script type="module">
+    import { SCENARIOS, paint } from './scenarios.js';
+    import { analyzeStream } from '../src/capture.js';
+
+    const VIEW = { width: 960, height: 540 };
+    const rows = document.getElementById('rows');
+    const status = document.getElementById('status');
+    window.harnessResults = null;
+
+    async function runOne(sc) {
+      const canvas = document.createElement('canvas');
+      canvas.width = VIEW.width;
+      canvas.height = VIEW.height;
+      const ctx = canvas.getContext('2d');
+      const stream = canvas.captureStream(60);
+      const t0 = performance.now();
+      const draw = () => {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, VIEW.width, VIEW.height);
+        paint(ctx, sc, performance.now() - t0, 100, 60);
+      };
+      draw();
+      const timer = setInterval(draw, 1000 / 60);
+      const job = analyzeStream(stream, { viewport: VIEW, durationMs: 2500 });
+      const r = await job.done;
+      clearInterval(timer);
+      return r;
+    }
+
+    document.getElementById('run').addEventListener('click', async () => {
+      rows.replaceChildren();
+      const out = [];
+      for (const sc of SCENARIOS) {
+        status.textContent = `Running: ${sc.name}`;
+        const r = await runOne(sc);
+        const got = { general: r.general.failed ? 'fail' : 'pass', red: r.red.failed ? 'fail' : 'pass' };
+        const match = got.general === sc.expect.general && got.red === sc.expect.red;
+        out.push({ id: sc.id, match, got, fps: r.stats.fps, frames: r.stats.frames, gPeak: r.general.peakFraction, rPeak: r.red.peakFraction, events: r.general.events.length + r.red.events.length, result: r });
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<th scope="row">${sc.name}</th><td>general ${sc.expect.general}, red ${sc.expect.red}</td>
+          <td>general ${got.general} (peak ${(r.general.peakFraction * 100).toFixed(1)}%), red ${got.red} (peak ${(r.red.peakFraction * 100).toFixed(1)}%), ${r.stats.fps.toFixed(0)} fps</td>
+          <td class="${match ? 'ok' : 'bad'}">${match ? 'Yes' : 'No'}</td>`;
+        rows.append(tr);
+      }
+      status.textContent = `Done. ${out.filter((o) => o.match).length} of ${out.length} scenarios matched.`;
+      window.harnessResults = out;
+    });
+  </script>
+</body>
+</html>

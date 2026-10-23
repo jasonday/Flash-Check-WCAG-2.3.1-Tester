@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Flash Check: WCAG 2.3.1 Tester",
+  "short_name": "Flash Check",
+  "version": "1.0.0",
+  "description": "Records a web page and reports whether it fails WCAG 2.2 SC 2.3.1 Three Flashes or Below Threshold (general and red flash).",
+  "minimum_chrome_version": "116",
+  "permissions": ["activeTab", "tabCapture", "offscreen", "scripting", "storage"],
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Flash Check: WCAG 2.3.1 Tester",
+    "default_popup": "src/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

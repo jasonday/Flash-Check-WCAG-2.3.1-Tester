@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Flash Check: WCAG 2.3.1 Tester</title>
+  <link rel="stylesheet" href="ui.css">
+  <link rel="stylesheet" href="popup.css">
+  <script type="module" src="popup.js"></script>
+</head>
+<body>
+  <main>
+    <h1>Flash Check</h1>
+    <p class="subtitle">WCAG 2.3.1 Tester</p>
+
+    <section id="setup" aria-labelledby="setup-h">
+      <h2 id="setup-h" class="visually-hidden">Set up a test</h2>
+      <p>Records this tab and checks it against the WCAG 2.2 flash thresholds. The tool never replays the recording.</p>
+      <ol class="steps">
+        <li>Choose how long to record.</li>
+        <li>Select <strong>Start test</strong>, then play any video or animation on the page.</li>
+        <li>Keep the tab visible and do not scroll until the test ends.</li>
+      </ol>
+
+      <form id="form">
+        <div class="field">
+          <label for="duration">Recording length</label>
+          <select id="duration">
+            <option value="10">10 seconds</option>
+            <option value="20">20 seconds</option>
+            <option value="30" selected>30 seconds</option>
+            <option value="60">1 minute</option>
+            <option value="120">2 minutes</option>
+            <option value="300">5 minutes</option>
+          </select>
+        </div>
+        <div class="check">
+          <input type="checkbox" id="overlay" checked>
+          <label for="overlay">Mark failing areas on the page</label>
+        </div>
+        <div class="check">
+          <input type="checkbox" id="openReport" checked>
+          <label for="openReport">Open the report when the test ends</label>
+        </div>
+        <button type="submit" class="primary" id="start">Start test</button>
+      </form>
+    </section>
+
+    <section id="running" hidden aria-labelledby="running-h">
+      <h2 id="running-h">Recording</h2>
+      <p>Play the page's videos and animations now. You can close this window; recording continues.</p>
+      <dl class="stats">
+        <div><dt>Time left</dt><dd id="left">-</dd></div>
+        <div><dt>Frames analyzed</dt><dd id="frames">0</dd></div>
+        <div><dt>Failures so far</dt><dd id="sofar">None</dd></div>
+      </dl>
+      <div id="sources"></div>
+      <button type="button" id="stop">Stop and analyze</button>
+    </section>
+
+    <div id="status" role="status" aria-live="polite"></div>
+
+    <p class="footer"><a href="report.html" target="_blank" id="history">View past reports</a></p>
+  </main>
+</body>
+</html>
