@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flash Check: WCAG 2.3.1 Tester</title>
+  <meta name="description" content="Test pages and examples for Flash Check, a Chrome extension that tests web pages against WCAG 2.3.1 Three Flashes or Below Threshold.">
+  <link rel="icon" href="icons/icon32.png">
+  <link rel="stylesheet" href="src/ui.css">
+  <style>
+    main { max-width: 760px; margin: 0 auto; padding: 24px 16px 64px; }
+    h1 { font-size: 30px; margin: 8px 0 4px; }
+    .subtitle { color: var(--muted); font-size: 18px; margin: 0 0 20px; }
+    h2 { font-size: 22px; margin: 32px 0 8px; }
+    ul.links { padding-left: 20px; }
+    ul.links li { margin-bottom: 12px; }
+    ul.links a { font-weight: 600; }
+    .warning { margin: 12px 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="icons/icon128.png" alt="" width="64" height="64">
+    <h1>Flash Check</h1>
+    <p class="subtitle">WCAG 2.3.1 Tester for Chrome</p>
+
+    <p>Flash Check records a web page while you use it and tells you whether it fails WCAG 2.3.1, Three Flashes or Below Threshold. It checks general flashes and red flashes using the WCAG 2.2 definitions and shows where each failure happened.</p>
+
+    <h2>Try it on the test pages</h2>
+    <div class="notice fail warning" role="note">
+      <strong>Photosensitive seizure warning.</strong>
+      The demo page flashes rapidly, and some demos flash in saturated red. Nothing flashes until you select a Start button, and every demo stops on its own after 20 seconds.
+    </div>
+    <ul class="links">
+      <li><a href="test-pages/flash-demos.html">Flash demos with known results</a><br>
+        Seven demos, each labeled with the result Flash Check should give. Start one, then run a 10 second test from the extension.</li>
+      <li><a href="test-pages/harness.html">Engine harness</a><br>
+        Runs every demo through the analysis on a hidden canvas and compares the results with the expected ones. Nothing flashes on screen.</li>
+      <li><a href="src/report.html?file=../test-pages/sample-report.json">Sample report</a><br>
+        What a report looks like, using made-up data with one general flash failure and one red flash failure.</li>
+    </ul>
+
+    <h2>More information</h2>
+    <ul class="links">
+      <li><a href="https://github.com/jasonday/Flash-Check-WCAG-2.3.1-Tester#readme">How to install and use Flash Check</a></li>
+      <li><a href="https://github.com/jasonday/Flash-Check-WCAG-2.3.1-Tester/blob/main/PRIVACY.md">Privacy policy</a></li>
+      <li><a href="https://github.com/jasonday/Flash-Check-WCAG-2.3.1-Tester/issues">Report a problem or ask a question</a></li>
+      <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold">Understanding WCAG 2.3.1 (W3C)</a></li>
+    </ul>
+  </main>
+</body>
+</html>

@@ -25,8 +25,9 @@
       <tbody id="rows"></tbody>
     </table>
   </main>
+  <script src="scenarios.js"></script>
   <script type="module">
-    import { SCENARIOS, paint } from './scenarios.js';
+    const { SCENARIOS, paint } = window.FlashScenarios;
     import { analyzeStream } from '../src/capture.js';
 
     const VIEW = { width: 960, height: 540 };

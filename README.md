@@ -11,6 +11,14 @@ It is meant to replace PEAT for web content. PEAT follows the WCAG 2.0 math, nee
 3. Select **Load unpacked** and choose this folder (the one with `manifest.json`).
 4. Pin **Flash Check: WCAG 2.3.1 Tester** to the toolbar.
 
+## Test pages online
+
+Try Flash Check on pages with known results, with nothing to download: [https://jasonday.github.io/Flash-Check-WCAG-2.3.1-Tester/](https://jasonday.github.io/Flash-Check-WCAG-2.3.1-Tester/)
+
+- **Flash demos:** seven flashing demos, each labeled with the result Flash Check should give. The page carries a seizure warning, and nothing flashes until you start a demo.
+- **Engine harness:** runs every demo through the analysis on a hidden canvas and checks the results. Nothing flashes on screen.
+- **Sample report:** what a report looks like, using made-up data.
+
 ## Run a test
 
 1. Open the page you want to test. Set the browser window to the largest size and zoom a user is likely to use.
@@ -83,6 +91,7 @@ All thresholds come from the WCAG 2.2 Understanding document for 2.3.1 and live 
 | `src/popup.*` | Toolbar popup |
 | `src/report.*` | Report page and report history |
 | `test/engine.test.mjs` | Engine unit tests with synthetic frames |
+| `index.html` | Landing page for the GitHub Pages site |
 | `test-pages/flash-demos.html` | Flashing demos with known outcomes (contains a seizure warning; nothing flashes until started) |
 | `test-pages/harness.html` | Runs every demo through the capture pipeline on a hidden canvas and compares with expected results |
 | `test-pages/sample-report.json` | Synthetic report for previewing the report page |
@@ -96,7 +105,7 @@ Requires Node 18 or later. No dependencies.
 npm test
 ```
 
-To try the test pages, serve the folder (ES modules do not load from `file://`):
+The flash demos page works opened straight from disk. The harness and sample report use ES modules, which do not load from `file://`, so serve the folder for those:
 
 ```bash
 python3 -m http.server 8231 --bind 127.0.0.1
@@ -105,3 +114,7 @@ python3 -m http.server 8231 --bind 127.0.0.1
 Then open `http://127.0.0.1:8231/test-pages/harness.html` and select **Run all scenarios**, or open `http://127.0.0.1:8231/src/report.html?file=../test-pages/sample-report.json` to preview the report.
 
 Other scripts: `npm run icons` rebuilds the icons; `node scripts/make-sample-report.mjs` rebuilds the sample report.
+
+### GitHub Pages
+
+The site at [https://jasonday.github.io/Flash-Check-WCAG-2.3.1-Tester/](https://jasonday.github.io/Flash-Check-WCAG-2.3.1-Tester/) is served straight from the `main` branch with no build step. To set it up on a fork: in the repository's **Settings > Pages**, set the source to **Deploy from a branch**, branch `main`, folder `/ (root)`. The `.nojekyll` file tells GitHub to serve the files as they are.

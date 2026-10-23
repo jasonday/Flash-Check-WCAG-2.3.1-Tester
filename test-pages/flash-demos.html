@@ -28,8 +28,10 @@
     <div class="sticky"><button type="button" id="stop-all">Stop all demos</button></div>
     <div id="demos"></div>
   </main>
-  <script type="module">
-    import { SCENARIOS, paint } from './scenarios.js';
+  <script src="scenarios.js"></script>
+  <script>
+  (() => {
+    const { SCENARIOS, paint } = window.FlashScenarios;
 
     const running = new Map();
     const stop = (id) => {
@@ -92,6 +94,7 @@
     }
     document.getElementById('stop-all').addEventListener('click', stopAll);
     document.addEventListener('keydown', (e) => e.key === 'Escape' && stopAll());
+  })();
   </script>
 </body>
 </html>

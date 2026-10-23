@@ -1,6 +1,9 @@
 // Shared flash scenarios for the demo page and the automated harness.
 // Sizes are CSS px. `expect` is the correct WCAG 2.3.1 outcome.
-export const SCENARIOS = [
+// A classic script (not a module) so the demo page also works when opened
+// straight from disk. Exposes window.FlashScenarios = { SCENARIOS, paint }.
+(() => {
+const SCENARIOS = [
   {
     id: 'large-10hz', name: 'Large black and white flash, 10 per second', w: 600, h: 400, hz: 10,
     a: '#000000', b: '#ffffff', expect: { general: 'fail', red: 'pass' },
@@ -39,7 +42,7 @@ export const SCENARIOS = [
 ];
 
 // Paints scenario `sc` at time `t` (ms) into a 2D context at (x, y).
-export function paint(ctx, sc, t, x = 0, y = 0) {
+function paint(ctx, sc, t, x = 0, y = 0) {
   const phase = Math.floor((t / 1000) * sc.hz * 2) % 2;
   if (!sc.checker) {
     ctx.fillStyle = phase ? sc.b : sc.a;
@@ -55,3 +58,6 @@ export function paint(ctx, sc, t, x = 0, y = 0) {
     }
   }
 }
+
+window.FlashScenarios = { SCENARIOS, paint };
+})();
