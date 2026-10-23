@@ -40,7 +40,12 @@ async function init() {
       if (!run) return renderMissing();
       return renderRun(run);
     }
-    if (file) return renderRun(await (await fetch(file)).json());
+    // ?file= is for previewing bundled sample reports; it never loads from another origin.
+    if (file) {
+      const url = new URL(file, location.href);
+      if (url.origin !== location.origin) throw new Error('Reports can only be loaded from this extension.');
+      return renderRun(await (await fetch(url)).json());
+    }
     return renderList();
   } catch (e) {
     main.replaceChildren(h('h1', {}, 'Report could not load'), h('p', {}, e.message));

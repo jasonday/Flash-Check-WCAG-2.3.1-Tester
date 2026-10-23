@@ -30,7 +30,7 @@ The tool never replays the recording, so testing a page does not expose you to m
 - **Possible flash sources**: videos, canvases, animated images, frames, and fast CSS animations found when the test started, so you can confirm each one was played.
 - **Download JSON**, **Copy text summary**, and **Print** for audit records. Saved JSON files can be reopened from **All reports**.
 
-The last 15 reports are kept in the extension's local storage. Nothing is sent anywhere.
+The last 15 reports are kept in the extension's local storage. Nothing is sent anywhere. See the [privacy policy](PRIVACY.md).
 
 ## What it measures
 
