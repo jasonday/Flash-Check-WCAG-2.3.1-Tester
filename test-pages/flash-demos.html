@@ -65,6 +65,7 @@
       btn.type = 'button';
       btn.textContent = 'Start';
       btn.setAttribute('aria-pressed', 'false');
+      btn.setAttribute('aria-describedby', `h-${sc.id}`);
       btn.addEventListener('click', () => {
         if (running.has(sc.id)) return stop(sc.id);
         const t0 = performance.now();
